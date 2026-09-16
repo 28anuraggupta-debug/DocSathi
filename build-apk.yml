@@ -1,0 +1,31 @@
+name: Build DocSathi APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract Android project
+        run: |
+          mkdir buildsrc
+          unzip -q DocSathi-Android-v1-Source.zip -d buildsrc
+
+      - name: Build APK
+        run: |
+          cd buildsrc
+          gradle --version
+          gradle assembleDebug --no-daemon
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: DocSathi-APK
+          path: buildsrc/app/build/outputs/apk/debug/app-debug.apk
