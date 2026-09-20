@@ -18,13 +18,23 @@ jobs:
           mkdir buildsrc
           unzip -q DocSathi-Android-v1-Source.zip -d buildsrc
 
+      - name: Find Android project
+        run: |
+          PROJECT_DIR=$(find buildsrc -type f \( -name "settings.gradle" -o -name "settings.gradle.kts" \) -print -quit | xargs dirname)
+          echo "PROJECT_DIR=$PROJECT_DIR" >> $GITHUB_ENV
+
       - name: Build APK
         run: |
-          cd buildsrc
+          cd "$PROJECT_DIR"
           gradle assembleDebug --no-daemon
+
+      - name: Find APK
+        run: |
+          APK=$(find "$PROJECT_DIR" -type f -name "*.apk" -print -quit)
+          echo "APK=$APK" >> $GITHUB_ENV
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: DocSathi-APK
-          path: buildsrc/app/build/outputs/apk/debug/app-debug.apk
+          path: ${{ env.APK }}
