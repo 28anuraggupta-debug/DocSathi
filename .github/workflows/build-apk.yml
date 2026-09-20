@@ -16,7 +16,7 @@ jobs:
       - name: Extract Android project
         run: |
           mkdir buildsrc
-          unzip -q DocSathi-Android-v1-Source.zip -d buildsrc
+          unzip -q DocSathi-v1.2-Final-Android-Source.zip -d buildsrc
 
       - name: Find Android project
         run: |
